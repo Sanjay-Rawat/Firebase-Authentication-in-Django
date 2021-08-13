@@ -7,6 +7,8 @@ var firebaseConfig = {
     appId: "1:47387944972:web:23fc4864f225d6d4b2e629",
     measurementId: "G-F7D0F1X31R"
 };
+firebase.initializeApp(firebaseConfig);
+firebase.analytics();
 const Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -19,9 +21,9 @@ const Toast = Swal.mixin({
     }
 })
 
-firebase.initializeApp(firebaseConfig);
-firebase.analytics();
+
 onAppInit()
+
 var _user;
 const redirect_to = "/home/"
 
@@ -41,7 +43,6 @@ function onAppInit() {
 function createAccoutWithEmail() {
     let email = document.getElementById("email").value
     let password = document.getElementById("pass").value
-    console.log(email, password)
     firebase.auth().createUserWithEmailAndPassword(email, password)
         .then((user) => {
             sendVerificationLink(user)
@@ -102,6 +103,8 @@ function forgetPassword(){
         })
       }).catch(error=>catchBlockHandler(error))
 }
+
+
 function logout() {
     firebase.auth().signOut().then(() => {
         window.open("/login/", "_self")
@@ -119,6 +122,7 @@ function catchBlockHandler(error) {
 
 function createSession() {
     firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then((idToken) => {
+        console.log(idToken)
         fetch('/create_session', {
             method: 'GET',
             headers: {

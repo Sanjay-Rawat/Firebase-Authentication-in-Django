@@ -9,14 +9,19 @@ from firebase_admin import auth
 script_dir = os.path.dirname(__file__)
 file_path = os.path.join(script_dir, 'abcsdd-e95cf-firebase-adminsdk-j865h-5e1e5867df.json')
 cred = credentials.Certificate(file_path)
-App=firebase_admin.initialize_app(cred)
+firebase_admin.initialize_app(cred)
 
 
 
 def isValidToken(request):
     id_token = request.headers["Authorization"]
+    print("=================================================start id token============================")
+    print(id_token)
+    
     try:
-        decoded_token = auth.verify_id_token(id_token)
+        print("=================================================start decoded token============================")
+        decoded_token = auth.verify_id_token(id_token) 
+        print(decoded_token)
         return decoded_token
     except:
-        return 
+        return  

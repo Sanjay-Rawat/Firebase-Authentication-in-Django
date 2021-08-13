@@ -16,16 +16,12 @@ Including another URLconf
 import os
 from auth.settings import BASE_DIR
 from django.contrib import admin
-from django.http.response import HttpResponse, JsonResponse
+from django.http.response import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import path
 from django.shortcuts import render
 import firebase_admin
 from firebase_admin import credentials
 from auth.fire import isValidToken
-
-
-
-
 
 def login(request):
     return render(request,"login.html")
@@ -37,21 +33,20 @@ def verify(request):
     return render(request,"verify.html")
 
 def home(request):
-    print(isLoggedIn(request))
-    return HttpResponse("hi there,you are now logged in")
+   if(isLoggedIn(request)==False):
+       return HttpResponseRedirect("/login")
+
+   return HttpResponse("hi there,you are now logged in")
 
 
 def create_session(request):
-    try:
-        user= request.session['user']
-    except:
-        user=isValidToken(request)
-
+    user=isValidToken(request)
     if(user):
         request.session["user"]=user
         return JsonResponse({"success":True})
     else:
         return JsonResponse({"success":False})
+
 
 def isLoggedIn(request):
     try:
